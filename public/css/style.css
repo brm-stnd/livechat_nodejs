@@ -1,0 +1,37 @@
+.chat {
+  width: 450px;
+  height: 500px;
+  max-width: 450px;
+  overflow-y: scroll;
+  margin-top: 5px;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #55595c;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: .25rem;
+}
+.chat li {
+  list-style: none;
+}
+.form-inline {
+  margin-top: 5px;
+}
+.text-chat {
+  max-width: 355px;
+  width: 355px;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #55595c;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: .25rem;
+}
+.btn-chat {
+  line-height: 48px;
+  margin-top: -7px;
+}
