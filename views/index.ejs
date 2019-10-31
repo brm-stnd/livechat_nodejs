@@ -1,77 +1,147 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title><%= title %></title>
-    <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/jquery-2.1.4.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script>
+<html lang="en" class="app">
+<head>  
+  <meta charset="utf-8" />
+  <title>Livechat Rooms</title>
+  <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="css/icon.css" type="text/css" />
+  <link rel="stylesheet" href="css/font.css" type="text/css" />
+  <link rel="stylesheet" href="css/app.css" type="text/css" />  
+    <!--[if lt IE 9]>
+    <script src="js/ie/html5shiv.js"></script>
+    <script src="js/ie/respond.min.js"></script>
+    <script src="js/ie/excanvas.js"></script>
+  <![endif]-->
+  <script src="js/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script>
       var socket = io();
-
+      
       $(document).ready(function() {
+        
+        Swal.mixin({
+          input: 'text',
+          allowOutsideClick: false,
+          confirmButtonText: 'Next &rarr;',
+          showCancelButton: true,
+          progressSteps: ['1', '2']
+        }).queue([
+          {
+            title: 'Room Chat',
+            text: 'Entry your room chat name'
+          },
+          'What\'s Your Name ?'
+        ]).then((result) => {
+          if (result.value) {
+            $('#room').val(result.value[0]);
+            $('.room-text').html(result.value[0]);
+            $('#name').val(result.value[1]);
+            Swal.fire(
+              'Good job!',
+              'Let\'s chat together :)',
+              'success'
+            );
+            create_room(result.value);
+          }
+        })
 
-        $('.btn-chat').on('click', function(event) {
-          var data = {
-            nama: $('#nama').val(),
-            message: $('.text-chat').val()
-          }
-          if ($('#nama').val() == '') {
-             $('#nama').css('border', '1px solid red');
-          } else {
-             $('#nama').css('border', '1px solid #ccc;');
-             kirim_pesan(data);
-             $('.text-chat').val('');
-          }
+        $('#btn-chat').on('click', function(event) {
+          send();
         });
 
-        $( ".text-chat" ).keypress(function( event ) {
+        $( "#text-chat" ).keypress(function( event ) {
           if ( event.which == 13 ) {
-            var data = {
-              nama: $('#nama').val(),
-              message: $('.text-chat').val()
-            }
-            if ($('#nama').val() == '') {
-               $('#nama').css('border', '1px solid red');
-            } else {
-               $('#nama').css('border', '1px solid #ccc;');
-               kirim_pesan(data);
-               $('.text-chat').val('');
-            }
+            event.preventDefault();
+            send();
           }
         });
 
       });
+
+      function send(){
+        var data = {
+          room: $('#room').val(),
+          name: $('#name').val(),
+          message: $('#text-chat').val()
+        }
+        if ($('#name').val() == '') {
+            $('#name').css('border', '1px solid red');
+        } else {
+            $('#name').css('border', '1px solid #ccc;');
+            send_msg(data);
+            $('#text-chat').val('');
+        }
+      }
     </script>
     <script src="/js/main.js"></script>
-  </head>
-  <body>
-    <div class="container-fluid">
-      <nav class="navbar navbar-light bg-faded">
-  <ul class="nav navbar-nav">
-    <li class="nav-item active">
-      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-      <input class="form-control" id="nama" type="text" placeholder="nama">
-    </li>
-  </ul>
-</nav>
-      <div class="col-lg-8">
-        <div class="chat">
-
-        </div>
-        <div class="form-inline">
-          <div class="form-group">
-            <div class="input-group">
-              <textarea name="name" class="text-chat"></textarea>
-            </div>
-          </div>
-          <button type="buttom" class="btn btn-primary btn-chat">SEND !!</button>
-        </div>
-      </div>
-    </div>
-  </body>
+</head>
+<body class="" >
+  <section class="vbox">
+      <section id="content">
+        <section class="hbox stretch">
+          <section>
+            <section class="vbox">
+              <header class="header bg-light lt b-b b-light">
+                <p>Room : <strong class='room-text'></strong></p>
+              </header>
+              <section class="w-f scrollable wrapper">              
+                  <section class="chat-list">
+                  
+                  </section>                    
+              </section>
+              <footer class="footer bg-light lt b-t b-light">
+                <form action="" class="m-t-sm">
+                  <div class="input-group">
+                    <input type="hidden" id="room" room='all'>
+                    <input type="hidden" id="name" value="none">
+                    <input type="text" id="text-chat" class="form-control input-sm rounded" placeholder="Say something">
+                    <span class="input-group-btn">
+                      <button id="btn-chat" class="btn btn-sm btn-danger font-bold btn-rounded" type="button">Send</button>
+                    </span>
+                  </div>
+                </form>
+              </footer>
+            </section>
+          </section>
+          <!-- side content -->
+          <aside class="aside-md bg-primary dker" id="sidebar">
+            <section class="vbox animated fadeInRight">
+              <section class="scrollable">
+                <h4 class="font-thin text-white padder m-b-none m-t">Chat</h4>
+                <div class="wrapper text-u-c"><strong>Online</strong></div>
+                <ul class="user-list list-group no-bg no-borders auto m-b-none">
+                  
+                  <li class="list-group-item">
+                    <div class="media">
+                      <span class="pull-left thumb-sm avatar">
+                        <img src="images/a3.png" class="img-circle">
+                        <i class="on b-white bottom"></i>
+                      </span>
+                      <div class="media-body">
+                        <div><a href="#">Julien Reowo</a></div>
+                      </div>
+                    </div>
+                  </li>
+               
+                </ul>
+              </section>
+            </section>              
+          </aside>
+          <!-- / side content -->
+        </section>
+        <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
+      </section>
+  </section>
+  <!-- Bootstrap -->
+  <script src="js/bootstrap.js"></script>
+  <!-- App -->
+  <script src="js/app.js"></script>  
+  <script src="js/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="js/app.plugin.js"></script>
+</body>
 </html>
